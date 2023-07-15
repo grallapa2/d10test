@@ -1,0 +1,32 @@
+name: d10-test
+recipe: drupal10
+config:
+  php: '8.1'
+  via: apache
+  webroot: web
+  database: mysql
+  composer_version: 2.3.6
+services:
+  appserver:
+    ports:
+      - '8888:80'
+    type: 'php:8.1'
+    xdebug: true
+  database:
+    type: mysql
+    portforward: 3306
+    creds:
+      user: drupal
+      password: drupal
+      database: drupal
+  pma:
+    type: phpmyadmin
+  mailhog:
+    type: mailhog
+    portforward: 1025
+    hogfrom:
+      - appserver
+tooling:
+  drush:
+    service: appserver
+    cmd: drush --root=/app/web
